@@ -1,6 +1,8 @@
 //Gil Parnon, Math 343, 11/14/18
 #include "matrix.h"
 using namespace std;
+
+
 matrix::matrix(int rowNumber, int columnNumber)
 {
 	row = new vectors[rowNumber];
@@ -45,7 +47,8 @@ vectors::~vectors()
 	delete [] value;
 }
 
-
+//Fairly straightforward, just initializes the matrix class
+//from an array of vectors. 
 void matrix::create(vectors * rows)
 {
 	for(int i = 0; i < rowSize; ++i)
@@ -57,7 +60,7 @@ void matrix::create(vectors * rows)
 	}
 }
 
-
+//Displays a matrix.
 void matrix::display()
 {
 	for(int i = 0; i < rowSize; ++i)
@@ -67,7 +70,7 @@ void matrix::display()
 	}
 }
 
-
+//Displays the values in a row, individual component of the display function
 void matrix::displayRow(vectors & x)
 {
 	for(int i = 0; i < columnSize; ++i)
@@ -76,7 +79,7 @@ void matrix::displayRow(vectors & x)
 	}
 }
 
-
+//Displays vectors vertically rather than horizontally
 void matrix::vectorDisplay(vectors & b)
 {
 	for(int i = 0; i < b.length; ++i)
@@ -110,7 +113,7 @@ void matrix::byMatrix(matrix & B, matrix & C)
 	}
 }
 
-
+//Transposes a matrix
 void matrix::transpose(matrix & transpose)
 {
 	for(int i = 0; i < rowSize; ++i)

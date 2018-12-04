@@ -16,78 +16,8 @@ csrData::~csrData()
 	delete [] columnIndex;
 }
 
-
 int csrData::readIn(int & columnSize)
 {
-	/*
-	columnSize = 0;
-	length = 0;
-	ifstream fileIn;
-	fileIn.open("CSR.txt");
-	if(!fileIn)
-		return 0;
-	int temp;
-	int temp2;
-	double input[SIZE];
-//import the data into a single large array, saving the spacing
-//of the data
-	while(fileIn.peek() != '\n')
-	{
-		fileIn >> input[length];
-		++length;
-	}
-	fileIn.ignore();
-	temp = length;
-	while(fileIn.peek() != '\n')
-	{
-		fileIn >> input[temp];
-		++temp;
-	}
-	fileIn.ignore();
-	temp2 = temp;
-	while(fileIn.peek() != '\n')
-	{
-		fileIn >> input[temp2];
-		++temp2;
-	}
-	fileIn.ignore();
-//copy the data into the csr class
-	data.value = new double[length];
-	row.value = new double[temp-length];
-	spacing.value = new double[temp2-temp];
-
-	//copy the data over
-	for(int i = 0; i < length; ++i)
-	{
-		data.value[i] = input[i];
-	}
-	for(int i = 0; i < temp - length; ++i)
-	{
-		row.value[i] = input[i + length];
-	}
-	for(int i = 0; i < temp2 - temp; ++i)
-	{
-		spacing.value[i] = input[i + temp];
-	} 
-	fileIn.close();
-
-	//the number of rows in the array is set to be the size
-	//of the number of items in the second array (row)
-	//number of columns is the final value of the row array
-	for(int i = 0; i < length; ++i)
-	{
-		if(spacing.value[i] > columnSize)
-		{
-			columnSize = spacing.value[i];
-		}
-	}
-	++columnSize;
-	columns = columnSize;
-	length = temp - length - 1;
-	return length;
-
-	*/
-
 	ifstream fileIn;
 	fileIn.open("matrix2.mtx");
 	if(!fileIn)
@@ -95,6 +25,8 @@ int csrData::readIn(int & columnSize)
 	double input[3];
 	double dataValues[SIZE];
 	int length = 0;
+	//This reads in the first three values which specify how 
+	//many rows, columns and non-zeros there are
 	for(int i = 0; i < 3; ++i)
 	{
 		fileIn >> input[i];
@@ -106,6 +38,8 @@ int csrData::readIn(int & columnSize)
 	columnIndex = new int[nonZero];
 	row.value = new double[length-1];
 	spacing.value = new double[nonZero];
+
+	//Read in the rest of the data
 	for(int i = 0; i < nonZero; ++i)
 	{
 		fileIn >> rowIndex[i];
@@ -141,7 +75,32 @@ void csrData::readOut()
 
 }
 
+//This takes a dense matrix and converts it to CSR format
+void csrData::convertToCSR(matrix & input)
+{
+	length = input.rowSize; columns = input.columnSize;
+	int index = 0;
+	for(int i = 0; i < input.rowSize; ++i)
+	{
+		for(int j = 0; j < input.rowSize; ++j)
+		{
+			//If the data is not a 0, add the data into the
+			//CSR and add its column index.
+			if(input.row[i].value[j] != 0)
+			{
+				data.value[index] = input.row[i].value[j];
+				++row.value[i+1];
+				spacing.value[index] = j - 1;
+				++index;
+				++nonZero;
+			}
+		}
+	}
+	row.value[0] = 0;
+}
 
+
+//This takes a CSR matrix and makes it into a dense matrix
 void csrData::createMatrix(matrix & A)
 {
 	for(int i = 0; i < nonZero; ++i)
@@ -152,14 +111,52 @@ void csrData::createMatrix(matrix & A)
 }
 
 
-void csrData::multiplyMatrix(csrData & A, csrData & B, csrData & result)
+//Multiply 2 matrices in CSR format and store them 
+void csrData::multiplyMatrix(csrData & A, csrData & b, matrix & result)
 {
+	//Where I will store the data.
+	csrData myResult;
+	for(int index = 0; index < A.length; ++index)
+	{
 	for(int i = 0; i < A.length; ++i)
 	{
-		for(int j = A.row.value[i]; j < A.row.value[i+1]; ++j)
+		//Check to make sure that you only multiple values 
+		//one row at a time
+		for(int j = A.row.value[i]-1; j < A.row.value[i+1]-1; ++j)
 		{
-//			result.
+			for(int k = 0; k < nonZero; ++k)
+			{
+				if(b.spacing.value[k] == i)
+				{
+					result.row[index].value[i] += A.data.value[j]*b.data.value[k];
+				}
+			}
 		}
 		
 	}
+	}
+	myResult.convertToCSR(result);
+}
+
+//This outputs the three arrays of values which
+//represent a CSR matrix
+void csrData::displayCSR()
+{
+	for(int i = 0; i < nonZero; ++i)
+	{
+		cout << data.value[i] << " ";
+	}	
+	cout << endl;
+
+	for(int i = 0; i < length; ++i)
+	{
+		cout << row.value[i] << " ";
+	}
+	cout << endl;
+
+	for(int i = 0; i < nonZero; ++i)
+	{
+		cout << spacing.value[i] << " ";
+	}	
+	cout << endl;
 }
