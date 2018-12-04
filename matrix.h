@@ -48,11 +48,11 @@ class matrix
 		//Each row is stored as a vector
 		vectors * row;
 
-	private:
-	//displays a vector 
-	void displayRow(vectors & x);
+		//Dimensions of the matrix
+		int rowSize;
+		int columnSize;
+
+		//displays a vector 
+		void displayRow(vectors & x);
 	
-	//Dimensions of the matrix
-	int rowSize;
-	int columnSize;
 };

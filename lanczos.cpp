@@ -1,5 +1,6 @@
 //Lanczos implementation
 #include "csr.h"
+using namespace std;
 
 float normCalc(vectors & q)
 {
@@ -14,30 +15,41 @@ float normCalc(vectors & q)
 
 float lanczosIter(vectors & q, matrix & A, vectors & qT)
 {
-	vectors nextIter;
+	vectors nextIter(A.columnSize);
 	A.byVector(q,nextIter);
 	return nextIter.byVector(qT);
 }
 
 
-float lanczosAlg(matrix & A, vectors & b, matrix & B)
+float lanczosAlg(matrix & A, vectors & b, matrix & result)
 {
+	normalizeVector(b);
 	vectors * q[b.length];
 	for(int i = 0; i < b.length; ++i)
 	{
-		q[i] = new vectors[b.length];
+		q[i] = new vectors(b.length);
+		q[i]->length = b.length;
 	}
-	B.row[0].value[0] = lanczosIter(b,A,b);
-	for(int i = 0; i < A.row[0].length; ++i)
+	for(int i = 0; i < b.length; ++i)
 	{
-		for(int j = 1; j < A.row[0].length; ++j)
+		for(int j = 0; j < b.length; ++j)
 		{
-			B.row[i].value[j] = lanczosIter(*q[j],A,*q[i]);
+			q[0]->value[i] = b.value[i];
+		}
+	} 
+	calculateQ(A,*q);
+	for(int i = 0; i < A.rowSize; ++i)
+	{
+		for(int j = 0; j < A.columnSize; ++j)
+		{
+			result.row[i].value[j] = lanczosIter(*q[j],A,*q[i]);
 		}
 	}
-
+	result.row[0].value[0] = lanczosIter(b,A,b);
+	result.display();
 	return 0;
 }
+
 
 void normalizeVector(vectors & q)
 {
@@ -72,9 +84,9 @@ void calculateQ(matrix & A, vectors * & q)
 			{
 				q[j].value[k] /= sum;
 				q[n].value[k] -= q[j].value[k];
-				normalizeVector(q[n]);
 			}
 
+			normalizeVector(q[n]);
 		}
 	}
 }
