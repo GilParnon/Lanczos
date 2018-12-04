@@ -81,6 +81,7 @@ float vectors::byVector(vectors & a)
 //Q vectors should already be initialized. Then generate the q vectors
 void calculateQ(matrix & A, vectors ** q)
 {
+	//Somewhere this is breaking
 	for(int i = 1; i < q[0]->length; ++i)
 	{
 		A.byVector(*q[i-1],*q[i]);
