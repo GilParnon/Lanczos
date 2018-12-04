@@ -16,7 +16,6 @@ csrData::~csrData()
 	delete [] columnIndex;
 }
 
-
 int csrData::readIn(int & columnSize)
 {
 	ifstream fileIn;
@@ -26,6 +25,8 @@ int csrData::readIn(int & columnSize)
 	double input[3];
 	double dataValues[SIZE];
 	int length = 0;
+	//This reads in the first three values which specify how 
+	//many rows, columns and non-zeros there are
 	for(int i = 0; i < 3; ++i)
 	{
 		fileIn >> input[i];
@@ -37,6 +38,8 @@ int csrData::readIn(int & columnSize)
 	columnIndex = new int[nonZero];
 	row.value = new double[length-1];
 	spacing.value = new double[nonZero];
+
+	//Read in the rest of the data
 	for(int i = 0; i < nonZero; ++i)
 	{
 		fileIn >> rowIndex[i];
@@ -72,7 +75,7 @@ void csrData::readOut()
 
 }
 
-
+//This takes a dense matrix and converts it to CSR format
 void csrData::convertToCSR(matrix & input)
 {
 	length = input.rowSize; columns = input.columnSize;
@@ -95,6 +98,9 @@ void csrData::convertToCSR(matrix & input)
 	}
 	row.value[0] = 0;
 }
+
+
+//This takes a CSR matrix and makes it into a dense matrix
 void csrData::createMatrix(matrix & A)
 {
 	for(int i = 0; i < nonZero; ++i)
@@ -105,13 +111,17 @@ void csrData::createMatrix(matrix & A)
 }
 
 
+//Multiply 2 matrices in CSR format and store them 
 void csrData::multiplyMatrix(csrData & A, csrData & b, matrix & result)
 {
+	//Where I will store the data.
 	csrData myResult;
 	for(int index = 0; index < A.length; ++index)
 	{
 	for(int i = 0; i < A.length; ++i)
 	{
+		//Check to make sure that you only multiple values 
+		//one row at a time
 		for(int j = A.row.value[i]-1; j < A.row.value[i+1]-1; ++j)
 		{
 			for(int k = 0; k < nonZero; ++k)
@@ -128,7 +138,8 @@ void csrData::multiplyMatrix(csrData & A, csrData & b, matrix & result)
 	myResult.convertToCSR(result);
 }
 
-
+//This outputs the three arrays of values which
+//represent a CSR matrix
 void csrData::displayCSR()
 {
 	for(int i = 0; i < nonZero; ++i)

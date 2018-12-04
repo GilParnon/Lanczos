@@ -26,6 +26,9 @@ class csrData
 
 		//Displays in CSR format
 		void displayCSR();
+
+
+		//Contains data for reading in from a file
 		int * rowIndex;
 		int * columnIndex;
 		int length;

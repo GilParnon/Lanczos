@@ -2,6 +2,8 @@
 #include "csr.h"
 using namespace std;
 
+
+//Calculate the norm of a vector
 float normCalc(vectors & q)
 {
 	float sum = 0;
@@ -12,7 +14,20 @@ float normCalc(vectors & q)
 	return sqrt(sum);
 }
 
+//Takes a vector and divides each value by the norm of the vector
+void normalizeVector(vectors & q)
+{
+	float norm = normCalc(q);
+	for(int i = 0; i < q.length; ++i)
+	{
+		q.value[i] /= norm;
+	}
+}
 
+
+
+//This function calculates qT * A * q for a given set of 
+//2 vectors
 float lanczosIter(vectors & q, matrix & A, vectors & qT)
 {
 	vectors nextIter(A.columnSize);
@@ -21,6 +36,9 @@ float lanczosIter(vectors & q, matrix & A, vectors & qT)
 }
 
 
+
+//This function takes A and b and stores the corresponding
+//T matrix as "result"
 float lanczosAlg(matrix & A, vectors & b, matrix & result)
 {
 	normalizeVector(b);
@@ -51,16 +69,7 @@ float lanczosAlg(matrix & A, vectors & b, matrix & result)
 }
 
 
-void normalizeVector(vectors & q)
-{
-	float norm = normCalc(q);
-	for(int i = 0; i < q.length; ++i)
-	{
-		q.value[i] /= norm;
-	}
-}
-
-
+//Inner Product of 2 vectors
 float vectors::byVector(vectors & a)
 {
 	float sum = 0;
@@ -71,7 +80,8 @@ float vectors::byVector(vectors & a)
 	return sum;
 }
 
-
+//Feed in an array of arrays,the matrix A, and the first value of the 
+//Q vectors should already be initialized. Then generate the q vectors
 void calculateQ(matrix & A, vectors * & q)
 {
 	for(int n = 1; n < q[0].length; ++n)
