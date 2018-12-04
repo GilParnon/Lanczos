@@ -19,7 +19,7 @@ csrData::~csrData()
 int csrData::readIn(int & columnSize)
 {
 	ifstream fileIn;
-	fileIn.open("matrix2.mtx");
+	fileIn.open("matrix3x3.txt");
 	if(!fileIn)
 		return 0;
 	double input[3];

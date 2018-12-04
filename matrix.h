@@ -13,7 +13,7 @@ class vectors
 		~vectors();
 		double * value;
 		int length;
-		float byVector(vectors & a);
+		double byVector(vectors & a);
 };
 class matrix
 {

@@ -10,12 +10,13 @@ int main()
 	matrix myMatrix(rowSize,columnSize);
 	matrix T(rowSize,columnSize);
 	import.createMatrix(myMatrix);
-	vectors x(columnSize);
+	vectors * x;
+	x = new vectors(columnSize);
 	vectors b(rowSize);
 	cout << "What do you want your vector to be?" << endl;
 	for(int i = 0; i < rowSize; ++i)
 	{
-		cin >> x.value[i];
+		cin >> x->value[i];
 	}
 //	myMatrix.byVector(x,b);
 //	cout << endl << "After multiplying by the vector this is your new vector: " << endl;
@@ -25,7 +26,6 @@ int main()
 //	import.displayCSR();
 //	import.convertToCSR(myMatrix);
 //	import.displayCSR();
-	delete [] x.value;
-	delete [] b.value; 
+	delete x;
 	return 0;
 }

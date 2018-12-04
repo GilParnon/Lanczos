@@ -41,8 +41,8 @@ class csrData
 		vectors row;
 		vectors spacing;
 };
-float normCalc(vectors & q);
-float lanczosIter(vectors & q, matrix & A, vectors & qT);
-float lanczosAlg(matrix & A, vectors & b, matrix & B);
+double normCalc(vectors & q);
+double lanczosIter(vectors * q, matrix & A, vectors * qT);
+double lanczosAlg(matrix & A, vectors *& b, matrix & B);
 void normalizeVector(vectors & q);
 void calculateQ(matrix & A, vectors ** q);
