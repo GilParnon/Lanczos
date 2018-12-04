@@ -24,13 +24,8 @@ void normalizeVector(vectors & q)
 	}
 }
 
-<<<<<<< HEAD
 
 
-=======
-
-
->>>>>>> abf733fb692ba10706a186523e76c6e955672f03
 //This function calculates qT * A * q for a given set of 
 //2 vectors
 float lanczosIter(vectors & q, matrix & A, vectors & qT)
@@ -55,7 +50,6 @@ float lanczosAlg(matrix & A, vectors & b, matrix & result)
 	}
 	for(int i = 0; i < b.length; ++i)
 	{
-<<<<<<< HEAD
 		q[0]->value[i] = b.value[i];
 	} 
 	calculateQ(A,q);
@@ -65,20 +59,6 @@ float lanczosAlg(matrix & A, vectors & b, matrix & result)
 		{
 			result.row[i].value[j] = lanczosIter(*q[j],A,*q[i]);
 		}
-=======
-		for(int j = 0; j < b.length; ++j)
-		{
-			q[0]->value[i] = b.value[i];
-		}
-	} 
-	calculateQ(A,*q);
-	for(int i = 0; i < A.rowSize; ++i)
-	{
-		for(int j = 0; j < A.columnSize; ++j)
-		{
-			result.row[i].value[j] = lanczosIter(*q[j],A,*q[i]);
-		}
->>>>>>> abf733fb692ba10706a186523e76c6e955672f03
 	}
 	result.row[0].value[0] = lanczosIter(b,A,b);
 	result.display();
@@ -99,33 +79,25 @@ float vectors::byVector(vectors & a)
 
 //Feed in an array of arrays,the matrix A, and the first value of the 
 //Q vectors should already be initialized. Then generate the q vectors
-<<<<<<< HEAD
 void calculateQ(matrix & A, vectors ** q)
-=======
-void calculateQ(matrix & A, vectors * & q)
->>>>>>> abf733fb692ba10706a186523e76c6e955672f03
 {
-	for(int n = 1; n < q[0]->length; ++n)
+	for(int i = 1; i < q[0]->length; ++i)
 	{
-		A.byVector(*q[n-1],*q[n]);
+		A.byVector(*q[i-1],*q[i]);
+		for(int f = 0; f < 9; ++f)
+		{
+			cout << q[i]->value[f] << " ";
+		}
 		for(int j = 0; j < q[0]->length; ++j)
 		{
-			float sum = lanczosIter(*q[n],A,*q[j]);
+			float sum = lanczosIter(*q[i],A,*q[j]);
 			for(int k = 0; k < q[0]->length; ++k)
 			{
-<<<<<<< HEAD
-				q[j]->value[k] /= sum;
-				q[n]->value[k] -= q[j]->value[k];
-			}
+				q[j]->value[k] *= sum;
+				q[i]->value[k] -= q[j]->value[k];
+			} 
 
-			normalizeVector(*q[n]);
-=======
-				q[j].value[k] /= sum;
-				q[n].value[k] -= q[j].value[k];
-			}
-
-			normalizeVector(q[n]);
->>>>>>> abf733fb692ba10706a186523e76c6e955672f03
+			normalizeVector(*q[i]);
 		}
 	}
 }

@@ -45,8 +45,4 @@ float normCalc(vectors & q);
 float lanczosIter(vectors & q, matrix & A, vectors & qT);
 float lanczosAlg(matrix & A, vectors & b, matrix & B);
 void normalizeVector(vectors & q);
-<<<<<<< HEAD
 void calculateQ(matrix & A, vectors ** q);
-=======
-void calculateQ(matrix & A, vectors * & q);
->>>>>>> abf733fb692ba10706a186523e76c6e955672f03
